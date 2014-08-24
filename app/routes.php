@@ -15,6 +15,8 @@ Route::get('/', function() {
     return Redirect::to('session/create');
 });
 
+Route::resource('home', 'HomeController',
+                array('only' => array('index')));
 
 //Routes for session controller
 Route::resource('session', 'SessionController', array('only' => array('create', 'store', 'destroy')));
