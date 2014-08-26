@@ -18,15 +18,15 @@ class SessionController extends \BaseController {
      */
     public function store() {
 
-        //Get request data
+      //Get request data
         $postData = Input::all();
         //Equivale a login
         if ($postData['usuario'] == "ayd1") {
-            Session::flash('message', 'Bienvenido ' . $postData['usuario'] );
+            Session::flash('message', 'Bienvenido ' . $postData['usuario']);
             return Redirect::to('home');
         } else {
-           Session::flash('error', 'Usuario o password invalido');
-           return Redirect::to('session/create');
+            Session::flash('error', 'Usuario o password invalido');
+            return Redirect::to('session/create');
         }
     }
 

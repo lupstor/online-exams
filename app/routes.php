@@ -11,6 +11,7 @@
   |
  */
 
+//Ruta principal redirecciona a login
 Route::get('/', function() {
     return Redirect::to('session/create');
 });
@@ -18,5 +19,8 @@ Route::get('/', function() {
 Route::resource('home', 'HomeController',
                 array('only' => array('index')));
 
-//Routes for session controller
+//Restful Routes for session controller
 Route::resource('session', 'SessionController', array('only' => array('create', 'store', 'destroy')));
+
+//Restful Routes for user controller
+Route::resource('user', 'UserController');
