@@ -24,3 +24,14 @@ Route::resource('session', 'SessionController', array('only' => array('create', 
 
 //Restful Routes for user controller
 Route::resource('user', 'UserController');
+
+//Rutas de examen
+Route::group(array('prefix' => 'exam'), function()
+{
+    Route::get('upload', function()
+    {
+        return View::make('exam.uploader');
+    });
+    Route::post('upload-exam','ExamController@upload');
+});
+Route::resource('exam', 'ExamController');

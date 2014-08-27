@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="">Test Manager</a>
+            {{link_to('/',"Test Manager",array('class'=>'navbar-brand'));}}
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -16,7 +16,13 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Profesores</a></li>
                 <li><a href="#">Cursos</a></li>
-                <li><a href="#">Examenes</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examenes <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Crear Examen</a></li>
+                        <li>{{link_to('exam/upload',"Subir examen");}}</li>
+                    </ul>
+                </li>
                 <li><a href="#">Alumnos</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones <span class="caret"></span></a>

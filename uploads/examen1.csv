@@ -1,0 +1,13 @@
+curso,titulo,intentos,duracion,hora_inicio,hora_fin,pregunta_examen
+1,Examen 1 BDD,4,60,18:00,19:00,Pregunta secreta
+tipo_respuesta,pregunta,punteo,porcentaje,penalización,respuesta_correcta,respuestas
+fv,Pregunta 1,10,,1,F,
+fv,Pregunta 2,10,,1,V,
+fv,Pregunta 3,10,,1,F,
+fv,Pregunta 4,10,,1,V,
+fv,Pregunta 5,10,,1,V,
+sel_mul,Pregunta 6,10,,1,opc1,opc1;opc2;op3
+sel_mul,Pregunta 7,10,,1,opc4,opc4;opc5;op6
+sel_mul,Pregunta 8,10,,1,opc7,opc7;opc8;op9
+sel_mul,Pregunta 9,10,,1,opc10,opc10;opc11;op12
+sel_mul,Pregunta 10,10,,1,opc15,opc13;opc14;op15
