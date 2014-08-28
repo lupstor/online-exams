@@ -141,6 +141,7 @@ class ExamController extends \BaseController
             }
         } catch (\Exception $exception) {
             Session::flash('error', 'Carga de examen no se realizo correctamente');
+            Log::error(__METHOD__ . "-[" .$exception->getMessage() . "] " .$exception->getTraceAsString());
         }
         return Redirect::to('exam/upload');
     }
