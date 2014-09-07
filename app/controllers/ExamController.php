@@ -163,6 +163,8 @@ class ExamController extends \BaseController
      */
     public function calificar()
     {
+        $postData = Input::all();
+        Log::info(__METHOD__ . "-[" .print_r($postData,true) . "] " );
 
     }
 
