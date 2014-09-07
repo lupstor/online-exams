@@ -26,12 +26,19 @@ Route::resource('session', 'SessionController', array('only' => array('create', 
 Route::resource('user', 'UserController');
 
 //Rutas de examen
+
 Route::group(array('prefix' => 'exam'), function()
 {
+    //Rutas para subir examen
     Route::get('upload', function()
     {
         return View::make('exam.uploader');
     });
     Route::post('upload-exam','ExamController@upload');
+
+    //Rutas para calificar examen
+    Route::get('calificar', 'ExamController@calificar');
+    Route::post('calificarPerform','ExamController@calificarPerform'); //Accion para calificar examen
+
 });
 Route::resource('exam', 'ExamController');

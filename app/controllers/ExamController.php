@@ -10,7 +10,10 @@ class ExamController extends \BaseController
      */
     public function index()
     {
-        //
+        $examenes = Examen::all();
+        $examenes->toarray();
+        $this->layout->main = View::make('exam.index',compact('examenes'));
+
     }
 
 
@@ -145,4 +148,22 @@ class ExamController extends \BaseController
         }
         return Redirect::to('exam/upload');
     }
+
+    /**
+     * Retorna vista califcar examen
+     */
+    public function calificar()
+    {
+        return View::make('exam.calificar'); //Retorna vista calificar
+    }
+
+    /**
+     * Califica un examen de acuerdo a un id de examen dado
+     */
+    public function calificarPerform()
+    {
+
+    }
+
+
 }

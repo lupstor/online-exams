@@ -20,6 +20,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examenes <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="#">Crear Examen</a></li>
+                        <li>{{link_to('exam/',"Listado de Examenes");}}</li>
                         <li>{{link_to('exam/upload',"Subir examen");}}</li>
                     </ul>
                 </li>
