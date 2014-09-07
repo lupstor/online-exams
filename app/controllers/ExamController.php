@@ -150,20 +150,33 @@ class ExamController extends \BaseController
     }
 
     /**
-     * Retorna vista califcar examen
+     * Retorna vista de calificacion de una evaluacion
+     */
+    public function calificacion()
+    {
+        return View::make('exam.calificacion'); //Retorna vista calificar
+    }
+
+
+    /**
+     * Califica una evaluacion de acuerdo a un id de evaluacion dado
      */
     public function calificar()
     {
-        return View::make('exam.calificar'); //Retorna vista calificar
+
     }
 
     /**
-     * Califica un examen de acuerdo a un id de examen dado
+     * Retorna vista de listado de evaluaciones
      */
-    public function calificarPerform()
+    public function evaluaciones()
     {
-
+        $evaluaciones = Evaluacion::all();
+        $evaluaciones->toarray();
+        $this->layout->main = View::make('exam.evaluaciones',compact('evaluaciones'));
     }
+
+
 
 
 }

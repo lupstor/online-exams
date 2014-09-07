@@ -36,9 +36,12 @@ Route::group(array('prefix' => 'exam'), function()
     });
     Route::post('upload-exam','ExamController@upload');
 
-    //Rutas para calificar examen
-    Route::get('calificar', 'ExamController@calificar');
-    Route::post('calificarPerform','ExamController@calificarPerform'); //Accion para calificar examen
+    //Rutas para calificar evaluaciones
+    Route::get('calificacion', 'ExamController@calificacion');//Accion que retorna vista de calificacion
+    Route::post('calificar','ExamController@calificar'); //Accion via post para calificar evaluacion
+
+    //Rutas para evaluaciones
+    Route::get('evaluaciones', 'ExamController@evaluaciones');
 
 });
 Route::resource('exam', 'ExamController');

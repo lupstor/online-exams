@@ -14,7 +14,6 @@
                     <th>Duracion</th>
                     <th>Hora Inicio</th>
                     <th>Hora fin</th>
-                    <th>Calificar</th>
                 </tr>
                 </thead>
 
@@ -26,9 +25,6 @@
                     <td>{{ $examen->duracion }}</td>
                     <td>{{ $examen->hora_inicio }}</td>
                     <td>{{ $examen->hora_fin }}</td>
-                    <td>{{ link_to_action('ExamController@calificar', 'Calificar',
-                        array($examen->id), array('class' => 'btn btn-primary')) }}
-                    </td>
                 </tr>
                 @endforeach
                 </tbody>
