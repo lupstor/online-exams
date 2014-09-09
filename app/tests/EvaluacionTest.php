@@ -23,9 +23,8 @@ class EvaluacionTest extends TestCase {
      */
     public function testCalificarEvaluacion()
     {
-        $json = '{"id_evaluacion":"1"}';
-        $this->client->request('POST', 'exam/calificar', $json );
-        $this->assertTrue($this->client->getResponse()->isOk());
+        $response = $this->call('GET', '/exam/calificar?id_evaluacion=1');
+        $this->assertResponseOk();
 
     }
 
