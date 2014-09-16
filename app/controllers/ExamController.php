@@ -154,6 +154,10 @@ class ExamController extends \BaseController
      */
     public function calificacion()
     {
+        $parameters = Input::all();
+        Log::info(__METHOD__ . " - PARAMETROS CALIFICACION [" .print_r($parameters,true) . "] " );
+        Log::info(__METHOD__ . " - id_evaluacion: [" . $parameters['id_evaluacion'] ."]");
+
         return View::make('exam.calificacion'); //Retorna vista calificar
     }
 
@@ -163,10 +167,10 @@ class ExamController extends \BaseController
      */
     public function calificar()
     {
-        $postData = Input::all();
-        Log::info(__METHOD__ . "-TESTINGD SDFSADFASDFSFSF   10 EVALUACION[" .print_r($postData,true) . "] " );
+        $parameters = Input::all();
+        Log::info(__METHOD__ . "-TESTING 11 EVALUACION[" .print_r($parameters,true) . "] " );
 
-        if ($postData['id_evaluacion'] == "1") {
+        if ($parameters['id_evaluacion'] == "1") {
             return Redirect::to('exam/evaluaciones');
 
         }else{
