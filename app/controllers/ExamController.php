@@ -1,43 +1,35 @@
 <?php
 
-class ExamController extends \BaseController
-{
+class ExamController extends \BaseController {
 
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
-    {
+    public function index() {
         $examenes = Examen::all();
         $examenes->toarray();
-        $this->layout->main = View::make('exam.index',compact('examenes'));
-
+        $this->layout->main = View::make('exam.index', compact('examenes'));
     }
-
 
     /**
      * Show the form for creating a new resource.
      *
      * @return Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
-
 
     /**
      * Store a newly created resource in storage.
      *
      * @return Response
      */
-    public function store()
-    {
+    public function store() {
         //
     }
-
 
     /**
      * Display the specified resource.
@@ -45,11 +37,9 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -57,11 +47,9 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -69,11 +57,9 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function update($id)
-    {
+    public function update($id) {
         //
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -81,18 +67,16 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
 
     /**
      * Carga examen desde archivo csv
      */
-    public function upload()
-    {
+    public function upload() {
         try {
-            if (Input::file('file') != null &&Input::file('file')->guessClientExtension() == strtolower("csv")) {
+            if (Input::file('file') != null && Input::file('file')->guessClientExtension() == strtolower("csv")) {
                 //Guarda examen en carpeta uploads
                 Input::file('file')->move(base_path() . '/uploads/', Input::file('file')->getClientOriginalName());
                 $archivo = File::get(base_path() . '/uploads/' . Input::file('file')->getClientOriginalName());
@@ -144,7 +128,7 @@ class ExamController extends \BaseController
             }
         } catch (\Exception $exception) {
             Session::flash('error', 'Carga de examen no se realizo correctamente');
-            Log::error(__METHOD__ . "-[" .$exception->getMessage() . "] " .$exception->getTraceAsString());
+            Log::error(__METHOD__ . "-[" . $exception->getMessage() . "] " . $exception->getTraceAsString());
         }
         return Redirect::to('exam/upload');
     }
@@ -152,41 +136,46 @@ class ExamController extends \BaseController
     /**
      * Retorna vista de calificacion de una evaluacion
      */
-    public function calificacion()
-    {
+    public function calificacion() {
         return View::make('exam.calificacion'); //Retorna vista calificar
     }
-
 
     /**
      * Califica una evaluacion de acuerdo a un id de evaluacion dado
      */
-    public function calificar()
-    {
+    public function calificar() {
         $postData = Input::all();
-        Log::info(__METHOD__ . "-TESTINGD SDFSADFASDFSFSF   10 EVALUACION[" .print_r($postData,true) . "] " );
+        Log::info(__METHOD__ . "-TESTINGD SDFSADFASDFSFSF   10 EVALUACION[" . print_r($postData, true) . "] ");
 
         if ($postData['id_evaluacion'] == "1") {
             return Redirect::to('exam/evaluaciones');
-
-        }else{
+        } else {
             return Redirect::to('exam/calificar');
-
         }
-
     }
 
     /**
      * Retorna vista de listado de evaluaciones
      */
-    public function evaluaciones()
-    {
+    public function evaluaciones() {
         $evaluaciones = Evaluacion::all();
         $evaluaciones->toarray();
-        $this->layout->main = View::make('exam.evaluaciones',compact('evaluaciones'));
+        $this->layout->main = View::make('exam.evaluaciones', compact('evaluaciones'));
     }
 
+    /*
+     * Retorna la vista del examen con id = al parrametro que se envia
+     *
+     */
 
-
+    public function crearExamen($idexamen) {
+        $exampreguntas= Examen::find($idexamen);
+        $varexamen = $exampreguntas->preguntas;
+        
+        //$varexamen->toarray();
+         //Log::info(printr(Examen::find( $idexamen )->preguntas(), true));
+        //$this->layout->main = View::make('exam.takexame', compact('$exampreguntas'),array('$varexamen'=>$varexamen));
+        $this->layout->main = View::make('exam.takexame',compact('varexamen','exampreguntas'));
+    }
 
 }

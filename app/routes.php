@@ -42,6 +42,7 @@ Route::group(array('prefix' => 'exam'), function()
 
     //Rutas para evaluaciones
     Route::get('evaluaciones', 'ExamController@evaluaciones');
+    Route::get('takexam/{idexamen}', 'ExamController@crearExamen');
 
 });
 Route::resource('exam', 'ExamController');
