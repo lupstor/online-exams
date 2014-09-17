@@ -10,7 +10,10 @@ class ExamController extends \BaseController
      */
     public function index()
     {
-        //
+        $examenes = Examen::all();
+        $examenes->toarray();
+        $this->layout->main = View::make('exam.index',compact('examenes'));
+
     }
 
 
@@ -145,4 +148,45 @@ class ExamController extends \BaseController
         }
         return Redirect::to('exam/upload');
     }
+
+    /**
+     * Retorna vista de calificacion de una evaluacion
+     */
+    public function calificacion()
+    {
+        return View::make('exam.calificacion'); //Retorna vista calificar
+    }
+
+
+    /**
+     * Califica una evaluacion de acuerdo a un id de evaluacion dado
+     */
+    public function calificar()
+    {
+        $postData = Input::all();
+        Log::info(__METHOD__ . "-TESTINGD SDFSADFASDFSFSF   10 EVALUACION[" .print_r($postData,true) . "] " );
+
+        if ($postData['id_evaluacion'] == "1") {
+            return Redirect::to('exam/evaluaciones');
+
+        }else{
+            return Redirect::to('exam/calificar');
+
+        }
+
+    }
+
+    /**
+     * Retorna vista de listado de evaluaciones
+     */
+    public function evaluaciones()
+    {
+        $evaluaciones = Evaluacion::all();
+        $evaluaciones->toarray();
+        $this->layout->main = View::make('exam.evaluaciones',compact('evaluaciones'));
+    }
+
+
+
+
 }

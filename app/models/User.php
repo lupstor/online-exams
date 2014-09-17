@@ -17,5 +17,8 @@ class User extends Eloquent {
     protected $hidden = array('password', 'remember_token');
     protected $fillable = array('usuario','password', 'nombre', 'email',"rol");
 
+    public function evaluaciones(){
+        return $this->hasMany('Evaluacion','alumno');
+    }
 
 }

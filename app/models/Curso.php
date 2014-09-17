@@ -1,13 +1,18 @@
 <?php
+/**
+ * Modelo de Cursos
+ * User: hERBER
+ * Date: 6/09/14
+ * Time: 20:50
+ */
 
-class Examen extends Eloquent {
-
+class Curso  extends Eloquent{
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'Examen';
+    protected $table = 'Curso';
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -20,7 +25,7 @@ class Examen extends Eloquent {
         return $this->hasMany('Pregunta','examen');
     }
 
-    public function curso(){
-        return $this->belongsTo('Curso','curso');
+    public function examenes(){
+        return $this->hasMany('Examen','curso');
     }
-}
+} 
