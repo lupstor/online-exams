@@ -137,13 +137,18 @@ class ExamController extends \BaseController {
      * Retorna vista de calificacion de una evaluacion
      */
     public function calificacion() {
+        
+
         $params = Input::all();
-        Log::info(__METHOD__ . "-PARAMETROS[" . print_r($params, true) . "] ");
+        Log::info(__METHOD__ . "-PARAMETROS[" . print_r($params, true) . "] ");        
 
         $idEvaluacion = $params['id_evaluacion'];
-        Log::info(__METHOD__ . "-ID EVALUACION[" .$idEvaluacion  . "] ");
+        Log::info(__METHOD__ . "-ID EVALUACION[" .$idEvaluacion  . "] ");        
 
-        return View::make('exam.calificacion'); //Retorna vista calificar
+        $evalu = Evaluacion::all();
+        $evalu->toarray();
+
+        return $this->layout->main = View::make('exam.calificacion', compact('idEvaluacion'),compact('evalu'), compact('params')); //Retorna vista calificar
     }
 
     /**
