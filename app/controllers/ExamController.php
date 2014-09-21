@@ -10,6 +10,8 @@ class ExamController extends \BaseController {
     public function index() {
         $examenes = Examen::all();
         $examenes->toarray();
+
+
         $this->layout->main = View::make('exam.index', compact('examenes'));
     }
 
@@ -18,8 +20,12 @@ class ExamController extends \BaseController {
      *
      * @return Response
      */
-    public function create() {
-        //
+    public function create()
+    {
+
+        $cursos = Curso::lists('nombre', 'id');
+        $this->layout->main = View::make('exam.create', array('cursos' => $cursos));
+
     }
 
     /**
@@ -27,9 +33,34 @@ class ExamController extends \BaseController {
      *
      * @return Response
      */
-    public function store() {
-        //
+    public function store()
+    {
+
+        //Get request data
+        $data = Input::all();
+        try {
+            //Crea Examen
+            $examen = new Examen();
+            $examen->curso = $data['id_curso'];
+            $examen->titulo = $data['titulo'];
+            $examen->n_intentos = $data['n_intentos'];
+            $examen->duracion = $data['duracion'];
+            $examen->hora_inicio = $data['hora_inicio'];
+            $examen->hora_fin = $data['hora_fin'];
+            $examen->pregunta = $data['pregunta'];
+            $examen->save();
+
+            Session::flash('message', 'Examen creado correctamente, por favor agregar preguntas');
+            return Redirect::to('exam/preguntas/'.$examen->id);
+
+        } catch (\Exception $exception) {
+            Log::error(__METHOD__ . "-[" . $exception->getMessage() . "] " . $exception->getTraceAsString());
+            Session::flash('error', 'Error al guardar examen');
+            return Redirect::to('exam/create');
+        }
+
     }
+
 
     /**
      * Display the specified resource.
@@ -70,6 +101,61 @@ class ExamController extends \BaseController {
     public function destroy($id) {
         //
     }
+
+
+    /**
+     * Retorna listado de preguntas de un examen dado
+     *
+     */
+    public function preguntas($idExamen)
+    {
+        if (!empty($idExamen)) {
+            $preguntas = Pregunta::where('examen', '=', $idExamen   )->get();
+            $this->layout->main = View::make('exam.preguntas', compact('preguntas','idExamen'));
+        }else{
+            Session::flash('error', 'Debe proporcionar un id de examen para visualizar las preguntas');
+            return Redirect::to('exam/');
+        }
+    }
+
+
+
+    /**
+     * Crea una pregunta de un examen determinado
+     *
+     */
+    public function crearPregunta($idExamen)
+    {
+        return View::make('exam.crear-pregunta',compact('preguntas','idExamen')); //Retorna vista calificar
+
+    }
+
+
+    /**
+     * Guarda una pregunta de un examen determinado
+     *
+     */
+    public function guardarPregunta($idExamen)
+    {
+        $data = Input::all();
+
+        Log::info(__METHOD__ . "- VALORES PREGUNTA" .print_r($data,true)  . "]  ID EXAMEN [" .$idExamen . "]");
+
+
+        if(true){
+
+            Session::flash('message', 'Pregunta creada correctamente');
+            return Redirect::to('exam/preguntas/' .$idExamen);
+
+
+
+        }else{
+            Session::flash('error', 'Error al crear pregunta');
+            return Redirect::to('exam/preguntas/' .$idExamen);
+        }
+
+    }
+
 
     /**
      * Carga examen desde archivo csv

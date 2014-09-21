@@ -44,5 +44,11 @@ Route::group(array('prefix' => 'exam'), function()
     Route::get('evaluaciones', 'ExamController@evaluaciones');
     Route::get('takexam/{idexamen}', 'ExamController@crearExamen');
 
+    //Preguntas
+    Route::get('preguntas/{idexamen}', 'ExamController@preguntas');
+    Route::get('preguntas/crear-pregunta/{idexamen}', 'ExamController@crearPregunta');
+    Route::post('preguntas/guardar-pregunta/{idexamen}','ExamController@guardarPregunta'); //Accion via post para calificar evaluacion
+
+
 });
 Route::resource('exam', 'ExamController');
