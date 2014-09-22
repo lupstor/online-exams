@@ -26,7 +26,7 @@
                     <td>{{ $evaluacion->examen()->first()->titulo }}</td>
                     <td>{{ $evaluacion->punteo }}</td>
                     <td>{{ $evaluacion->examen()->first()->curso()->first()->nombre}}</td>
-                    <td>{{ link_to_action('ExamController@calificacion', 'Calificar',  array($evaluacion->id), array('class' => 'btn btn-primary')) }}
+                    <td>{{ link_to_action('ExamController@calificacion', 'Calificar',  array("id_evaluacion=".$evaluacion->id), array('class' => 'btn btn-primary')) }}
                     </td>
                 </tr>
                 @endforeach

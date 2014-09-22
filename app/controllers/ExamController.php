@@ -1,21 +1,19 @@
 <?php
 
-class ExamController extends \BaseController
-{
+class ExamController extends \BaseController {
 
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
-    {
+    public function index() {
         $examenes = Examen::all();
         $examenes->toarray();
-        $this->layout->main = View::make('exam.index',compact('examenes'));
 
+
+        $this->layout->main = View::make('exam.index', compact('examenes'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -24,9 +22,11 @@ class ExamController extends \BaseController
      */
     public function create()
     {
-        //
-    }
 
+        $cursos = Curso::lists('nombre', 'id');
+        $this->layout->main = View::make('exam.create', array('cursos' => $cursos));
+
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +35,30 @@ class ExamController extends \BaseController
      */
     public function store()
     {
-        //
+
+        //Get request data
+        $data = Input::all();
+        try {
+            //Crea Examen
+            $examen = new Examen();
+            $examen->curso = $data['id_curso'];
+            $examen->titulo = $data['titulo'];
+            $examen->n_intentos = $data['n_intentos'];
+            $examen->duracion = $data['duracion'];
+            $examen->hora_inicio = $data['hora_inicio'];
+            $examen->hora_fin = $data['hora_fin'];
+            $examen->pregunta = $data['pregunta'];
+            $examen->save();
+
+            Session::flash('message', 'Examen creado correctamente, por favor agregar preguntas');
+            return Redirect::to('exam/preguntas/'.$examen->id);
+
+        } catch (\Exception $exception) {
+            Log::error(__METHOD__ . "-[" . $exception->getMessage() . "] " . $exception->getTraceAsString());
+            Session::flash('error', 'Error al guardar examen');
+            return Redirect::to('exam/create');
+        }
+
     }
 
 
@@ -45,11 +68,9 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -57,11 +78,9 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -69,11 +88,9 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function update($id)
-    {
+    public function update($id) {
         //
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -81,18 +98,71 @@ class ExamController extends \BaseController
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
+
+
+    /**
+     * Retorna listado de preguntas de un examen dado
+     *
+     */
+    public function preguntas($idExamen)
+    {
+        if (!empty($idExamen)) {
+            $preguntas = Pregunta::where('examen', '=', $idExamen   )->get();
+            $this->layout->main = View::make('exam.preguntas', compact('preguntas','idExamen'));
+        }else{
+            Session::flash('error', 'Debe proporcionar un id de examen para visualizar las preguntas');
+            return Redirect::to('exam/');
+        }
+    }
+
+
+
+    /**
+     * Crea una pregunta de un examen determinado
+     *
+     */
+    public function crearPregunta($idExamen)
+    {
+        return View::make('exam.crear-pregunta',compact('preguntas','idExamen')); //Retorna vista calificar
+
+    }
+
+
+    /**
+     * Guarda una pregunta de un examen determinado
+     *
+     */
+    public function guardarPregunta($idExamen)
+    {
+        $data = Input::all();
+
+        Log::info(__METHOD__ . "- VALORES PREGUNTA" .print_r($data,true)  . "]  ID EXAMEN [" .$idExamen . "]");
+
+
+        if(true){
+
+            Session::flash('message', 'Pregunta creada correctamente');
+            return Redirect::to('exam/preguntas/' .$idExamen);
+
+
+
+        }else{
+            Session::flash('error', 'Error al crear pregunta');
+            return Redirect::to('exam/preguntas/' .$idExamen);
+        }
+
+    }
+
 
     /**
      * Carga examen desde archivo csv
      */
-    public function upload()
-    {
+    public function upload() {
         try {
-            if (Input::file('file') != null &&Input::file('file')->guessClientExtension() == strtolower("csv")) {
+            if (Input::file('file') != null && Input::file('file')->guessClientExtension() == strtolower("csv")) {
                 //Guarda examen en carpeta uploads
                 Input::file('file')->move(base_path() . '/uploads/', Input::file('file')->getClientOriginalName());
                 $archivo = File::get(base_path() . '/uploads/' . Input::file('file')->getClientOriginalName());
@@ -144,7 +214,7 @@ class ExamController extends \BaseController
             }
         } catch (\Exception $exception) {
             Session::flash('error', 'Carga de examen no se realizo correctamente');
-            Log::error(__METHOD__ . "-[" .$exception->getMessage() . "] " .$exception->getTraceAsString());
+            Log::error(__METHOD__ . "-[" . $exception->getMessage() . "] " . $exception->getTraceAsString());
         }
         return Redirect::to('exam/upload');
     }
@@ -152,45 +222,57 @@ class ExamController extends \BaseController
     /**
      * Retorna vista de calificacion de una evaluacion
      */
-    public function calificacion()
-    {
-        $parameters = Input::all();
-        Log::info(__METHOD__ . " - PARAMETROS CALIFICACION [" .print_r($parameters,true) . "] " );
-        Log::info(__METHOD__ . " - id_evaluacion: [" . $parameters['id_evaluacion'] ."]");
+    public function calificacion() {
+        
 
-        return View::make('exam.calificacion'); //Retorna vista calificar
+        $params = Input::all();
+        Log::info(__METHOD__ . "-PARAMETROS[" . print_r($params, true) . "] ");        
+
+        $idEvaluacion = $params['id_evaluacion'];
+        Log::info(__METHOD__ . "-ID EVALUACION[" .$idEvaluacion  . "] ");        
+
+        $evalu = Evaluacion::all();
+        $evalu->toarray();
+
+        return $this->layout->main = View::make('exam.calificacion', compact('idEvaluacion'),compact('evalu'), compact('params')); //Retorna vista calificar
     }
-
 
     /**
      * Califica una evaluacion de acuerdo a un id de evaluacion dado
      */
-    public function calificar()
-    {
-        $parameters = Input::all();
-        Log::info(__METHOD__ . "-TESTING 11 EVALUACION[" .print_r($parameters,true) . "] " );
+    public function calificar() {
+        $postData = Input::all();
+        Log::info(__METHOD__ . "-TESTING   10 EVALUACION[" . print_r($postData, true) . "] ");
 
-        if ($parameters['id_evaluacion'] == "1") {
+        if ($postData['id_evaluacion'] == "1") {
             return Redirect::to('exam/evaluaciones');
-
-        }else{
+        } else {
             return Redirect::to('exam/calificar');
-
         }
-
     }
 
     /**
      * Retorna vista de listado de evaluaciones
      */
-    public function evaluaciones()
-    {
+    public function evaluaciones() {
         $evaluaciones = Evaluacion::all();
         $evaluaciones->toarray();
-        $this->layout->main = View::make('exam.evaluaciones',compact('evaluaciones'));
+        $this->layout->main = View::make('exam.evaluaciones', compact('evaluaciones'));
     }
 
+    /*
+     * Retorna la vista del examen con id = al parrametro que se envia
+     *
+     */
 
-
+    public function crearExamen($idexamen) {
+        $exampreguntas= Examen::find($idexamen);
+        $varexamen = $exampreguntas->preguntas;
+        
+        //$varexamen->toarray();
+         //Log::info(printr(Examen::find( $idexamen )->preguntas(), true));
+        //$this->layout->main = View::make('exam.takexame', compact('$exampreguntas'),array('$varexamen'=>$varexamen));
+        $this->layout->main = View::make('exam.takexame',compact('varexamen','exampreguntas'));
+    }
 
 }
