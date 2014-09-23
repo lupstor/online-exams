@@ -2,17 +2,6 @@
 
 class ExamenTest extends TestCase {
 
-    /**
-     * Prueba de calificar examen
-     *
-     * @return void
-     */
-    public function testCalificar() {
-        //Solicita pagina de login
-        $this->client->request('GET', '/session/create');
-        //Retorna el codigo de respuesta de la llamada
-        $this->assertTrue($this->client->getResponse()->isOk());
-    }
 
     /**
      * Prueba de crear examen
@@ -31,7 +20,7 @@ class ExamenTest extends TestCase {
      * @return void
      */
     public function testCrearPregunta() {
-        $this->call('POST', '/exam/guardarPregunta?tipo_respuesta=fv&titulo=Examen de prueba&n_intentos=2&duracion=60&hora_inicio=20:30&hora_fin=20:50&pregunta=clave');
+        $this->call('POST', 'exam/preguntas/guardar-pregunta/12?tipo_respuesta=fv&pregunta=Pregunta de preuba?&punteo=5&porcentaje=0&penalizacion=00&respuesta=F');
         $this->assertResponseStatus(302);
     }
 
