@@ -40,6 +40,9 @@ class ExamController extends \BaseController
 
         //Get request data
         $data = Input::all();
+
+        Log::info(__METHOD__ . "- GUARDAR EXAMEN [" . print_r($data, true) . "] ");
+
         try {
             //Crea Examen
             $examen = new Examen();
@@ -143,9 +146,18 @@ class ExamController extends \BaseController
     public function guardarPregunta($idExamen)
     {
         $data = Input::all();
+
         try {
 
             $preguntas = Pregunta::where('examen', '=', $idExamen)->get();
+
+            $sumaPunteo = 0;
+            $sumaPorcentaje = 0;
+            foreach($preguntas as $pregunta){
+                $sumaPunteo += $pregunta->punteo;
+                $sumaPorcentaje += $pregunta->porcentaje;
+            }
+
 
 
             $pregunta = new Pregunta();
@@ -154,7 +166,7 @@ class ExamController extends \BaseController
             $pregunta->pregunta = $data['pregunta'];
             $pregunta->punteo = $data['punteo'];
             $pregunta->porcentaje = $data['porcentaje'];
-            $pregunta->penalizacion = $data['porcentaje'];
+            $pregunta->penalizacion = $data['penalizacion'];
 
             if($data['tipo_respuesta'] == "directa"){
                 $pregunta->respuesta_correcta = null;
@@ -164,20 +176,24 @@ class ExamController extends \BaseController
                 $pregunta->respuesta_correcta = $data['respuesta_correcta'];
             }
 
-            $pregunta->save();
 
-            if($data['tipo_respuesta'] == "sel_mul") {
-                $respuestasSelMult = explode(",",$data['respuestas']);
-                foreach ($respuestasSelMult as $opcion) {
-                    $respuesta = new Respuesta();
-                    $respuesta->respuesta = trim($opcion);
-                    $pregunta->respuestas()->save($respuesta);
+            if(($sumaPunteo + $pregunta->punteo) <= 100 && ($sumaPorcentaje + $pregunta->punporcentajeteo) <=100) {
+                $pregunta->save();
+                if ($data['tipo_respuesta'] == "sel_mul") {
+                    $respuestasSelMult = explode(",", $data['respuestas']);
+                    foreach ($respuestasSelMult as $opcion) {
+                        $respuesta = new Respuesta();
+                        $respuesta->respuesta = trim($opcion);
+                        $pregunta->respuestas()->save($respuesta);
+                    }
                 }
+
+                Session::flash('message', 'Pregunta creada correctamente');
+                return Redirect::to('exam/preguntas/' . $idExamen);
+            }else{
+                Session::flash('error', 'No se pudo crear pregunta, suma de punteo o porcentaje mayor 100');
+                return Redirect::to('exam/preguntas/' . $idExamen);
             }
-
-            Session::flash('message', 'Pregunta creada correctamente');
-            return Redirect::to('exam/preguntas/' . $idExamen);
-
         } catch (\Exception $exception) {
             Log::error(__METHOD__ . "-[" . $exception->getMessage() . "] " . $exception->getTraceAsString());
             Session::flash('error', 'Error al crear pregunta');
