@@ -38,7 +38,7 @@ Route::group(array('prefix' => 'exam'), function()
 
     //Rutas para calificar evaluaciones
     Route::get('calificacion', 'ExamController@calificacion');//Accion que retorna vista de calificacion
-    Route::post('calificar','ExamController@calificar'); //Accion via post para calificar evaluacion
+    Route::post('calificar/{idevaluacion}','ExamController@calificar'); //Accion via post para calificar evaluacion
 
     //Rutas para evaluaciones
     Route::get('evaluaciones', 'ExamController@evaluaciones');

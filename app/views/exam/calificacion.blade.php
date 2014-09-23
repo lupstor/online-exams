@@ -13,18 +13,16 @@
                     @endforeach
                 </h4></center>
 
+            {{ Form::open(array('id' => 'calficar_form','url' => 'exam/calificar/'. $idEvaluacion))
+            }}
+
+
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <center>
                         <th>Numero de Pregunta</th>
-                    </center>
-                    <center>
                         <th>Respuesta</th>
-                    </center>
-                    <center>
                         <th>Punteo</th>
-                    </center>
                 </tr>
                 </thead>
 
@@ -33,27 +31,25 @@
                 @foreach ($detalle as $pregunta)
 
                 <tr>
-                    <center>
-                        <td>{{ $pregunta->pregunta }}</td>
-                    </center>
-                    <center>
-                        <td>{{ $pregunta->respuesta }}</td>
-                    </center>
-                    <center>
-                        <td><input type="text" size="5" name="punteo"
-                                  />/100
-                        </td>
-                    </center>
-                    <center>
-                        <td>{{ link_to_action('ExamController@calificacion', 'Registrar
-                            nota',array("id_evaluacion=".$evaluacion->id."&id_pregunta=".$evaluacion->detalle()->first()->pregunta."&id_pregunta=".$evaluacion->detalle()->first()->punteo
-                            ), array('class' => 'btn btn-primary')) }}
-                    </center>
+                    <td>{{ $pregunta->pregunta }}</td>
+                    <td>{{ $pregunta->respuesta }}</td>
+                    <td><input type="text" size="5"  name="{{$pregunta->pregunta}}" value="{{$pregunta->punteo}}"/>/100
+                    </td>
+
                 </tr>
                 @endforeach
 
                 </tbody>
             </table>
+
+
+            {{ Form::submit('Calificar', array('class' => 'btn btn-primary')) }}
+
+            <div class="pull-right">
+            <h4>Nota: {{$nota}}/100</h4>
+            </div>
+            {{ Form::close() }}
+
         </div>
     </div>
 </div>

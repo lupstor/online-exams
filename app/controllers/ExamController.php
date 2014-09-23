@@ -153,11 +153,10 @@ class ExamController extends \BaseController
 
             $sumaPunteo = 0;
             $sumaPorcentaje = 0;
-            foreach($preguntas as $pregunta){
+            foreach ($preguntas as $pregunta) {
                 $sumaPunteo += $pregunta->punteo;
                 $sumaPorcentaje += $pregunta->porcentaje;
             }
-
 
 
             $pregunta = new Pregunta();
@@ -168,16 +167,16 @@ class ExamController extends \BaseController
             $pregunta->porcentaje = $data['porcentaje'];
             $pregunta->penalizacion = $data['penalizacion'];
 
-            if($data['tipo_respuesta'] == "directa"){
+            if ($data['tipo_respuesta'] == "directa") {
                 $pregunta->respuesta_correcta = null;
-            }else if($data['tipo_respuesta'] == "fv"){
+            } else if ($data['tipo_respuesta'] == "fv") {
                 $pregunta->respuesta_correcta = $data['respuesta'];
-            }else{
+            } else {
                 $pregunta->respuesta_correcta = $data['respuesta_correcta'];
             }
 
 
-            if(($sumaPunteo + $pregunta->punteo) <= 100 && ($sumaPorcentaje + $pregunta->punporcentajeteo) <=100) {
+            if (($sumaPunteo + $pregunta->punteo) <= 100 && ($sumaPorcentaje + $pregunta->punporcentajeteo) <= 100) {
                 $pregunta->save();
                 if ($data['tipo_respuesta'] == "sel_mul") {
                     $respuestasSelMult = explode(",", $data['respuestas']);
@@ -190,7 +189,7 @@ class ExamController extends \BaseController
 
                 Session::flash('message', 'Pregunta creada correctamente');
                 return Redirect::to('exam/preguntas/' . $idExamen);
-            }else{
+            } else {
                 Session::flash('error', 'No se pudo crear pregunta, suma de punteo o porcentaje mayor 100');
                 return Redirect::to('exam/preguntas/' . $idExamen);
             }
@@ -271,36 +270,51 @@ class ExamController extends \BaseController
     public function calificacion()
     {
 
-
         $params = Input::all();
-        Log::info(__METHOD__ . "-PARAMETROS[" . print_r($params, true) . "] ");
 
         $idEvaluacion = $params['id_evaluacion'];
         //$evaluacion = Evaluacion::find($idEvaluacion);
         $detalle = DetalleEvaluacion::where('evaluacion', '=', $idEvaluacion)->get();
 
-
-        Log::info(__METHOD__ . "-ID EVALUACION[" . $idEvaluacion . "] ");
+        $nota = 0 ;
+        foreach($detalle as $registro){
+            $nota += $registro->punteo;
+        }
 
         $evalu = Evaluacion::all();
         $evalu->toarray();
 
-        return $this->layout->main = View::make('exam.calificacion', compact('idEvaluacion','evalu','params','detalle')); //Retorna vista calificar
+        return $this->layout->main = View::make('exam.calificacion', compact('idEvaluacion', 'evalu', 'params', 'detalle',"nota")); //Retorna vista calificar
     }
 
     /**
      * Califica una evaluacion de acuerdo a un id de evaluacion dado
      */
-    public function calificar()
+    public function calificar($idEvaluacion)
     {
-        $postData = Input::all();
-        Log::info(__METHOD__ . "-TESTING   10 EVALUACION[" . print_r($postData, true) . "] ");
+        $param = Input::all();
 
-        if ($postData['id_evaluacion'] == "1") {
-            return Redirect::to('exam/evaluaciones');
-        } else {
-            return Redirect::to('exam/calificar');
+        $suma= 0;
+        foreach ($param as $key => $value) {
+            $suma += $value;
         }
+
+        Log::info(__METHOD__ . "-SUMA[$suma] ");
+
+
+        if($suma <= 100) {
+            foreach ($param as $key => $value) {
+                if ($key != "_token") {
+                    DetalleEvaluacion::where('evaluacion', '=', $idEvaluacion)->where('pregunta', '=', $key)->update(array('punteo' => $value));;
+                }
+            }
+            Session::flash('message', 'Evaluacion calificada correctamente');
+
+        }else{
+            Session::flash('error', 'Suma de punteos mayor que 100, operacion no permitida');
+        }
+
+        return Redirect::to('exam/calificacion?id_evaluacion='.$idEvaluacion);
     }
 
     /**
