@@ -276,12 +276,16 @@ class ExamController extends \BaseController
         Log::info(__METHOD__ . "-PARAMETROS[" . print_r($params, true) . "] ");
 
         $idEvaluacion = $params['id_evaluacion'];
+        //$evaluacion = Evaluacion::find($idEvaluacion);
+        $detalle = DetalleEvaluacion::where('evaluacion', '=', $idEvaluacion)->get();
+
+
         Log::info(__METHOD__ . "-ID EVALUACION[" . $idEvaluacion . "] ");
 
         $evalu = Evaluacion::all();
         $evalu->toarray();
 
-        return $this->layout->main = View::make('exam.calificacion', compact('idEvaluacion'), compact('evalu'), compact('params')); //Retorna vista calificar
+        return $this->layout->main = View::make('exam.calificacion', compact('idEvaluacion','evalu','params','detalle')); //Retorna vista calificar
     }
 
     /**
