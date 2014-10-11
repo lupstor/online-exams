@@ -83,4 +83,28 @@ class CourseController extends \BaseController {
 	}
 
 
+    /**
+      Asigna un alumno a un curso
+     */
+    public function asignar()
+    {
+        //Get request data
+        $data = Input::all();
+        Log::info(__METHOD__ . "- Crear Asignacion [" . print_r($data, true) . "] ");
+        try {
+            //Crea Asingacion
+            $asignacion = new Asignacion();
+            $asignacion->curso = $data['id_curso'];
+            $asignacion->alumno = $data['id_alumno'];
+            $asignacion->save();
+            Session::flash('message', 'Asignacion realizada correctamente');
+            return Redirect::to('course/asignacion/');
+        } catch (\Exception $exception) {
+            Log::error(__METHOD__ . "-[" . $exception->getMessage() . "] " . $exception->getTraceAsString());
+            Session::flash('error', 'Error al crear asignacion');
+            return Redirect::to('course/asignacion/');
+        }
+    }
+
+
 }

@@ -52,3 +52,14 @@ Route::group(array('prefix' => 'exam'), function()
 
 });
 Route::resource('exam', 'ExamController');
+
+
+Route::group(array('prefix' => 'course'), function()
+{
+    //Rutas cursos
+    Route::get('asignacion', function()
+    {
+        return View::make('course.asignacion');
+    });
+    Route::post('asignar','CourseController@asignar');
+});

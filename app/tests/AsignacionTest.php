@@ -1,32 +1,31 @@
 <?php
 
 
-class EvaluacionTest extends TestCase {
-
-	/**
-	 * Retorna el listado de evaluaciones previo a calificar dicha evaluacion
-	 *
-	 * @return void
-	 */
-	public function testListadoEvaluaciones()
-	{
-        $crawler = $this->client->request('GET', '/exam/evaluaciones');
-        $this->assertTrue($this->client->getResponse()->isOk());
-        $this->assertCount(1, $crawler->filter('h3:contains("Listado De Evaluaciones")'));
-	}
+class AsignacionTest extends TestCase {
 
 
     /**
-     * Califica evaluacion de acuerdo a un id dado
+     * Verifica enlace de pagina de asignacion
      *
      * @return void
      */
-    public function testCalificarEvaluacion()
+    public function testVerificarPaginaAsignacion()
     {
-        $response = $this->call('GET', '/exam/calificar?id_evaluacion=1');
-        $this->assertResponseOk();
+        $crawler = $this->client->request('GET', '/course/asignacion');
+        $this->assertTrue($this->client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter('h3:contains("Asignar Curso")'));
 
     }
 
+	/**
+	 * Asigna alumno a un curso específico
+	 *
+	 * @return void
+	 */
+	public function testAsignarAlumno()
+	{
+        $this->call('POST', 'course/asignar/?id_alumno=1&id_curso=1');
+        $this->assertResponseStatus(302);
+    }
 
 }
