@@ -59,7 +59,9 @@ Route::group(array('prefix' => 'course'), function()
     //Rutas cursos
     Route::get('asignacion', function()
     {
-        return View::make('course.asignacion');
+        $cursos = Curso::lists('nombre', 'id');
+        $usuarios = User::lists('nombre', 'id');
+        return View::make('course.asignacion', array('cursos' => $cursos, 'usuarios' => $usuarios));
     });
     Route::post('asignar','CourseController@asignar');
 });
