@@ -3,6 +3,7 @@
 
 <h3>Asignar Curso</h3>
 <div class="well">
+			{{ Form::open(array('id' => 'asignar_form','url' => 'course/asignar')) }}
             <h3>Asignacion de cursos</h3>           
             <table class="table table-striped table-bordered">
                 <thead>
@@ -22,7 +23,7 @@
                     </td>
                     <td><div class="form-group">
 		                {{ Form::label('usuario', 'Usuario') }}
-		                {{ Form::select('id_usuario', $usuarios, null , array('class' => 'form-control')) }}
+		                {{ Form::select('id_alumno', $usuarios, null , array('class' => 'form-control')) }}
 		            </div></td>                    
                 </tr>                
                 </tbody>
